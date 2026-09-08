@@ -1,0 +1,26 @@
+# Maven
+target/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# OS-generated files
+.DS_Store
+Thumbs.db
