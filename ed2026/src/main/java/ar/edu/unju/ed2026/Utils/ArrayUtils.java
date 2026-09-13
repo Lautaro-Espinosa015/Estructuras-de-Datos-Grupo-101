@@ -74,6 +74,19 @@ public class ArrayUtils {
         }
     }
 
+        /**
+     * Metodo que muestra los elementos de un arreglo de caracteres
+     * @param array arreglo de caracteres
+     * @param message mensaje a mostrar antes de los elementos
+     */
+    public static <Element> void showArrayOneDimensionGeneric(Element[] array, String message) {
+        System.out.println(message);
+        for (int i = 0; i < array.length; i++) {
+            System.out.print("["+ array[i] + "] ");
+        }
+    }
+
+
 
 
 }

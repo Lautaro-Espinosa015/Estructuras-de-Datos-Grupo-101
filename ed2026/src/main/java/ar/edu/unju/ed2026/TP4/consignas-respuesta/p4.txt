@@ -1,0 +1,120 @@
+PREGUNTAS Y RESPUESTAS SOBRE EL PROBLEMA
+
+1. Tamaño del arreglo de IDs
+
+Pregunta:
+En el punto (d), el tamaño del arreglo que se debe devolver no se conoce de antemano.
+Dado que la cola debe recorrerse sin destruirla, ¿cómo se determina el tamaño del arreglo
+antes de empezar a llenarlo?
+
+Respuesta:
+En Java, el tamaño de un arreglo es fijo después de su creación. Por eso, para evitar crear
+un arreglo demasiado grande con posiciones de valor null, existen dos alternativas:
+
+a) Realizar dos pasadas por la cola
+
+1. En la primera pasada, se cuentan los tickets cuyo nivel de urgencia sea mayor o igual a 4.
+2. Se crea el arreglo con el tamaño exacto: `new String[contador]`.
+3. En la segunda pasada, se recorren nuevamente los tickets y se cargan sus IDs en el arreglo.
+
+La cola puede recorrerse mediante un iterador. Si no existe un iterador, se pueden desencolar
+los elementos y encolarlos nuevamente, utilizando una cola auxiliar si fuera necesario.
+
+b) Usar una estructura dinámica intermedia
+
+Se recorre la cola una sola vez y se agregan los IDs que cumplen la condición a un
+`ArrayList<String>`. Luego, la lista se convierte en un arreglo de tamaño exacto mediante:
+
+`lista.toArray(new String[0])`
+
+También se puede utilizar `Arrays.copyOf()` para ajustar el tamaño del arreglo.
+
+2. Valor de retorno cuando no existe un ticket de nivel 5
+
+Pregunta:
+¿Qué retorna el punto (c) si en la cola no existe ningún ticket de nivel 5? ¿Cómo se debe
+informar al usuario?
+
+Respuesta:
+Si no existe ningún ticket de nivel 5, lo más claro es que el método retorne `null` o
+`Optional.empty()`, indicando que no se encontró ningún ticket. Sin embargo, en la
+implementación de `EJE4_T4.java`, se devuelve un ticket creado por defecto (`new Ticket()`),
+cuyos atributos están vacíos.
+
+En el método `main`, se debe verificar el resultado antes de mostrarlo:
+
+```java
+Ticket critico = getFirstTicketFiveUrgencyLevel(queueTickets);
+
+if (critico == null || critico.getIdTicket().isEmpty()) {
+		System.out.println("No se encontraron tickets críticos de nivel 5.");
+} else {
+		System.out.println("Primer ticket crítico encontrado: " + critico);
+}
+```
+
+De esta manera, se informa correctamente al usuario y se evita una posible excepción
+`NullPointerException`.
+
+3. Modificación del nivel de urgencia
+
+Pregunta:
+Si se desea modificar el atributo `nivelUrgencia` de los tickets, por ejemplo, sumarle 1 a la
+urgencia de todos, ¿es necesario desencolar y encolar los objetos o se pueden modificar
+directamente mientras se recorren?
+
+Respuesta:
+En Java, los objetos se manejan mediante referencias. Por lo tanto, si se dispone de una
+referencia a cada ticket, se puede modificar directamente su atributo mediante los setters:
+
+`ticket.setLevelUrgency(ticket.getLevelUrgency() + 1);`
+
+Sin embargo, si la cola no ofrece un iterador ni acceso indexado y solo permite las operaciones
+fundamentales (`add` y `poll`), es necesario:
+
+1. Desencolar un ticket.
+2. Modificar su nivel de urgencia.
+3. Encolarlo nuevamente.
+
+Este proceso debe repetirse únicamente durante el tamaño inicial `N` de la cola. Así se
+conserva el orden original y se evita recorrer la cola indefinidamente.
+
+4. Ventajas y desventajas de las alternativas
+
+Pregunta:
+Para resolver el punto (d) y generar el arreglo de IDs sin modificar la cola original, un
+compañero propone realizar dos pasadas por la cola: la primera para contar los tickets que
+cumplen la condición y la segunda para llenar el arreglo. Otro compañero propone realizar una
+sola pasada y agregar los IDs a un `ArrayList`. ¿Qué ventajas y desventajas presenta cada
+alternativa?
+
+Respuesta:
+
+a) Dos pasadas por la cola
+
+Ventajas:
+
+- Permite crear directamente un arreglo con el tamaño exacto.
+- No requiere utilizar una estructura dinámica intermedia.
+- Respeta el uso de arreglos estáticos.
+
+Desventajas:
+
+- La cola debe recorrerse dos veces.
+- Realiza más operaciones que la alternativa de una sola pasada.
+- Aunque se recorren aproximadamente `2N` elementos, la complejidad asintótica sigue siendo
+	`O(N)`.
+
+b) Una pasada usando `ArrayList`
+
+Ventajas:
+
+- La cola se recorre una sola vez.
+- El algoritmo es más simple y directo.
+- Solo se almacenan los IDs que cumplen la condición.
+
+Desventajas:
+
+- Requiere memoria adicional para el `ArrayList`.
+- La lista puede necesitar ampliar internamente su capacidad mientras crece.
+- Al final, es necesario convertir la lista en un arreglo fijo.
